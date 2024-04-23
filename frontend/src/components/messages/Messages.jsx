@@ -16,7 +16,7 @@ const Messages = () => {
 	}, [messages]);
 
 	return (
-		<div className='px-4 flex-1 overflow-auto'>
+		<div className='px-4 flex-1 overflow-auto bg-[url("./back2.jpg")] object-contain bg-repeat w-full h-[250px] bg-center-bottom bg-no-repeat bg-cover shadow-[inset_0_0_1000px_rgba(0,0,0,0.7)]'>
 			{!loading &&
 				messages.length > 0 &&
 				messages.map((message) => (
