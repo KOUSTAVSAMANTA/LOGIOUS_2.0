@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useConversation from "../../zustand/useConversation";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
@@ -8,6 +8,15 @@ import "./msgcont.css"
 
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
+
+	const { setAI, Aitype } = useAuthContext();
+
+	const handleItemClick = () => {
+		const newAIType = Aitype === "Assistant" ? "Chat" : "Assistant";
+		console.log(newAIType)
+		setAI(newAIType);
+		// setDropdownOpen(false); // Close the dropdown after selecting an item
+	};
 
 	useEffect(() => {
 		// cleanup function (unmounts)
@@ -21,10 +30,17 @@ const MessageContainer = () => {
 			) : (
 				<>
 					{/* Header */}
-					<div className='bg-slate-500 px-4 py-2 mb-2 flex'>
-						<div className='w-12 rounded-full'><img src={selectedConversation.profilePic} alt='user avatar' className="h-8"/></div>{" "}
-						<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
+					<div className='bg-slate-500 px-4 py-2 mb-2 flex items-center justify-between'>
+						<div className='flex items-center'>
+							<div className='w-12 rounded-full'>
+								<img src={selectedConversation.profilePic} alt='user avatar' className="h-8" />
+							</div>
+							<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
+						</div>
+						<button className="btn  btn-outline btn-warning"onClick={handleItemClick}>{Aitype}</button>
 					</div>
+
+
 					<Messages />
 					<MessageInput />
 				</>

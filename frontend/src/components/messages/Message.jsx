@@ -7,9 +7,11 @@ const Message = ({ message }) => {
 	const { selectedConversation } = useConversation();
 	const fromMe = message.senderId === authUser._id;
 	const formattedTime = extractTime(message.createdAt);
-	const chatClassName = fromMe ? "chat-end" : "chat-start";
-	const profilePic = fromMe ? authUser.profilePic : selectedConversation?.profilePic;
-	const bubbleBgColor = fromMe ? "bg-blue-500" : "";
+	// const chatClassName = fromMe ? "chat-end" : "chat-start";
+	const chatClassName = message.senderId === 'AI' ? 'chat-start' : (fromMe ? 'chat-end' : 'chat-start');
+	let unc = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF63g8BlJpwHJ-YQvMnOa70YWk-suGXzjA_A&s'
+	const profilePic = message.senderId==='AI'?unc:(fromMe ? authUser.profilePic : selectedConversation?.profilePic);
+	const bubbleBgColor = message.senderId==='AI'?'bg-green-500':(fromMe ? "bg-blue-500" : "");
 
 	const shakeClass = message.shouldShake ? "shake" : "";
 

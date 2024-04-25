@@ -28,10 +28,15 @@ const useSendMessage = () => {
 				const data = await res.json()
 				console.log(data)
 				let msg ={createdAt:new Date().toISOString(),
-					message:data.response,
-					receiverId:selectedConversation._id,
+					message:message,
+					receiverId:'AI',
 					senderId:authUser._id}
-				setMessages([...messages, msg]);
+				
+				let msg2 ={createdAt:new Date().toISOString(),
+						message:data.response,
+						receiverId:authUser._id,
+						senderId:'AI'}
+				setMessages([...messages, msg,msg2]);
 			}else{
 				console.log("user")
 				const res = await fetch(`/api/messages/send/${selectedConversation._id}`, {
