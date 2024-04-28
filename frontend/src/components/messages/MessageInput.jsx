@@ -45,7 +45,7 @@ const MessageInput = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <input
+        {/* <input
           type='file'
           accept='image/*'
           className='hidden'
@@ -64,7 +64,7 @@ const MessageInput = () => {
         />
         <button type='button' className='btn btn-ghost' onClick={startRecording}>
           <AiOutlineAudio />
-        </button>
+        </button> */}
         <button type='submit' className='btn btn-ghost'>
           {loading ? <div className='loading loading-spinner'></div> : <BsSend />}
         </button>

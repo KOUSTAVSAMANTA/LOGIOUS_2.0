@@ -3,7 +3,7 @@ import { extractTime } from "../../utils/extractTime";
 import useConversation from "../../zustand/useConversation";
 
 const Message = ({ message }) => {
-	const { authUser } = useAuthContext();
+	const { authUser,Aitype } = useAuthContext();
 	const { selectedConversation } = useConversation();
 	const fromMe = message.senderId === authUser._id;
 	const formattedTime = extractTime(message.createdAt);
@@ -23,7 +23,13 @@ const Message = ({ message }) => {
 					<img alt='Tailwind CSS chat bubble component' src={profilePic} /></div>
 				</div>
 			</div>
-			<div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2`}>{message.message}</div>
+			<div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-4`} style={{ maxWidth: '80%' }}>
+				{message.senderId === "AI" ? (
+					<pre lang="python"><code style={{ whiteSpace: 'pre-wrap' }}>{message.message}</code></pre>
+				) : (
+					message.message
+				)}
+			</div>
 			<div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>{formattedTime}</div>
 		</div>
 	);

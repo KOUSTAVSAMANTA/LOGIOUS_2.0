@@ -5,7 +5,7 @@ import { useAuthContext } from "../context/AuthContext";
 
 const useSendMessage = () => {
 	const [loading, setLoading] = useState(false);
-	const { authUser } = useAuthContext();
+	const { authUser,Aitype } = useAuthContext();
 	const { messages, setMessages, selectedConversation } = useConversation();
 
 	const sendMessage = async (message) => {
@@ -22,7 +22,8 @@ const useSendMessage = () => {
 					},
 					body: JSON.stringify({ 
 						text: message.replace("@logious","logious"),
-						userID:selectedConversation._id+authUser._id
+						userID:selectedConversation._id+authUser._id,
+						type:Aitype
 				 }),
 				})
 				const data = await res.json()
