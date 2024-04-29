@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import useConversation from "../../zustand/useConversation";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
@@ -9,7 +9,58 @@ import "./msgcont.css"
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
 
-	const { setAI, Aitype } = useAuthContext();
+	const { setAI, Aitype, Img, setImg } = useAuthContext();
+	const [selectedValue, setSelectedValue] = useState('');
+	const fileInputRef = useRef(null);
+
+    const handleSelectChange = (event) => {
+        setSelectedValue(event.target.value);
+		setImg(event.target.value)
+		console.log(selectedValue)
+    };
+
+	const handleFileChange = async () => {
+		const file = fileInputRef.current.files[0];
+		const fileName = file.name; // Get the file name
+
+		const formData = new FormData();
+		formData.append('file', file);
+
+		try {
+			const response = await fetch('http://127.0.0.1:8000/upload', {
+				method: 'POST',
+				body: formData
+			});
+
+			if (response.ok) {
+				console.log('File uploaded successfully');
+				// Handle success
+			} else {
+				console.error('File upload failed');
+				// Handle error
+			}
+		} catch (error) {
+			console.error('Error uploading file:', error);
+			// Handle error
+		}
+		setImg(fileName)
+		// console.log("selected",fileName)
+	};
+
+
+	function handleItemIMG(event) {
+		const clickedItemText = event.target.innerText;
+		if (clickedItemText === "Upload") {
+
+			console.log(`Clicked item: ${clickedItemText}`, Img);
+			document.getElementById('my_modal_1').showModal()
+		} else {
+			console.log(`Clicked item: ${clickedItemText}`, Img);
+			document.getElementById('my_modal_2').showModal()
+		}
+		// Perform actions based on the clicked item
+	}
+
 
 	const handleItemClick = () => {
 		const newAIType = Aitype === "Assistant" ? "Chat" : "Assistant";
@@ -22,6 +73,13 @@ const MessageContainer = () => {
 		// cleanup function (unmounts)
 		return () => setSelectedConversation(null);
 	}, [setSelectedConversation]);
+
+	const renderImgOption = () => {
+        if (Img!==null && Img.trim() !== '' ) {
+            return <option>{Img}</option>;
+        }
+    };
+	console.log(Img)
 
 	return (
 		<div className='md:min-w-[450px] flex flex-col wrapper '>
@@ -37,8 +95,49 @@ const MessageContainer = () => {
 							</div>
 							<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
 						</div>
-						<button className="btn  btn-outline btn-warning"onClick={handleItemClick}>{Aitype}</button>
+						<ul className="menu menu-vertical lg:menu-horizontal flex-row bg-base-200 rounded-box">
+							<li><a onClick={handleItemIMG}>Upload</a></li>
+							<li><a onClick={handleItemIMG}>Images</a></li>
+						</ul>
+						<button className="btn  btn-outline btn-warning" onClick={handleItemClick}>{Aitype}</button>
 					</div>
+					<dialog id="my_modal_1" className="modal">
+						<div className="modal-box">
+							<h3 className="font-bold text-lg">Hello!</h3>
+							<p className="py-4">Press ESC key or click the button below to close</p>
+							<input
+								type="file"
+								className="file-input file-input-bordered w-full max-w-xs"
+								ref={fileInputRef}
+								onChange={handleFileChange}
+							/>
+							<div className="modal-action">
+								<form method="dialog">
+									{/* if there is a button in form, it will close the modal */}
+									<button className="btn">Close</button>
+								</form>
+							</div>
+						</div>
+					</dialog>
+
+					<dialog id="my_modal_2" className="modal">
+						<div className="modal-box">
+							<h3 className="font-bold text-lg">Hello!</h3>
+							<p className="py-4">Press ESC key or click the button below to close</p>
+							<p className="py-4">Currently Selected image is {Img}</p>
+							<select className="select select-info w-full max-w-xs" value={selectedValue} onChange={handleSelectChange}>
+								<option disabled selected>Select The Image </option>
+								<option>null</option>
+								{renderImgOption()}
+							</select>
+							<div className="modal-action">
+								<form method="dialog">
+									{/* if there is a button in form, it will close the modal */}
+									<button className="btn">Close</button>
+								</form>
+							</div>
+						</div>
+					</dialog>
 
 
 					<Messages />
