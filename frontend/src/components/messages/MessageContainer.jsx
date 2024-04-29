@@ -9,7 +9,7 @@ import "./msgcont.css"
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
 
-	const { setAI, Aitype, Img, setImg } = useAuthContext();
+	const { authUser,setAI, Aitype, Img, setImg } = useAuthContext();
 	const [selectedValue, setSelectedValue] = useState('');
 	const fileInputRef = useRef(null);
 
@@ -61,6 +61,20 @@ const MessageContainer = () => {
 		// Perform actions based on the clicked item
 	}
 
+	const clearmem = async ()=>{
+		const res = await fetch('http://localhost:8000/clear/', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ 
+						userID:selectedConversation._id+authUser._id
+				 }),
+				})
+		const data = await res.json()
+		alert(data.response)
+	}
+
 
 	const handleItemClick = () => {
 		const newAIType = Aitype === "Assistant" ? "Chat" : "Assistant";
@@ -98,6 +112,7 @@ const MessageContainer = () => {
 						<ul className="menu menu-vertical lg:menu-horizontal flex-row bg-base-200 rounded-box">
 							<li><a onClick={handleItemIMG}>Upload</a></li>
 							<li><a onClick={handleItemIMG}>Images</a></li>
+							<li><a onClick={clearmem}>Clear AI Memory</a></li>
 						</ul>
 						<button className="btn  btn-outline btn-warning" onClick={handleItemClick}>{Aitype}</button>
 					</div>
